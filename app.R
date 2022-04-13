@@ -6,15 +6,14 @@ library(here)
 library(ggrepel)
 library(ggplot2)
 
-setwd("C:/Users/Ellie/OneDrive/Documents/onedrive uni/OneDrive/masters/Data managment and visualisation/main_project/") #wd set
-pwbla <- read.csv("data/pwbest_localauth_filtered.csv") #uploaded file needed and assigned to pwbla variable
-View(pwbla)
-head(pwbla)
-pwbla <- pwbla %>% #renamed columns in dataframe
+pwbestlocalauth <- read.csv(here("data", "pwbest_localauth_filtered.csv"))
+View(pwbestlocalauth)
+head(pwbestlocalauth)
+pwbestlocalauth <- pwbestlocalauth %>% #renamed columns in dataframe
   rename(Geography = Title, pwb = X, '2016-17' = X.2, '2017-18' = X.6, '2018-19' = X.10, '2019-20' = X.14, '2020-21' = X.18)
-pwbla <- pwbla %>% #selected columns of focus in dataframe
+pwbestlocalauth <- pwbestlocalauth %>% #selected columns of focus in dataframe
   select(Geography, pwb, '2016-17', '2017-18','2018-19', '2019-20', '2020-21')
-pwblaclean <- pwbla[-c(1,2),] #removed columns to clean dataframe
+pwblaclean <- pwbestlocalauth[-c(1,2),] #removed columns to clean dataframe
 View(pwblaclean)
 
 #creating a shiny app to display personal wellbeing scores for each geographical area in the UK for each year  
