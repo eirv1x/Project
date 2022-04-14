@@ -3,6 +3,7 @@ title: "index"
 author: "E Irving"
 date: "13/04/2022"
 output: html_document
+runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
@@ -69,13 +70,32 @@ ui <- shinyUI(fluidPage(
 
 #now to instruct the server what to display 
 server <- shinyServer(function(input,output){
-  output$scatterplot <- renderPlot({ #ggplot used to create a scatterplot of the data depending on year picked by user
-   ggplot(data=pwbestlocalauth, mapping = aes(x= pwb, y=input$year, color = Geography)) + geom_point() + geom_smooth(alpha=0.2, method = 'lm') + labs(x = "Personal Wellbeing Measures",
-                                                                                                                                                 y = "Scores", title = "Personal Wellbeing Scores") + geom_jitter() + geom_text_repel(aes(label=Geography))
+  output$scatterplot <- renderPlot({
+    if (input$year == "2016-17"){
+      ggplot(pwbestlocalauth, aes(pwb,`2016-17`, color=Geography)) + geom_point() + geom_smooth(alpha=0.2,method='lm') +
+        labs(x = "Personal Wellbeing Measures",
+               y = "Scores", title = "Personal Wellbeing Scores") + geom_jitter() + geom_text_repel(aes(label=Geography))
+    } else if(input$year == "2017-18"){
+      ggplot(pwbestlocalauth, aes(pwb,`2017-18`, color=Geography)) + geom_point() + geom_smooth(alpha=0.2,method='lm') + 
+        labs(x = "Personal Wellbeing Measures",
+               y = "Scores", title = "Personal Wellbeing Scores") + geom_jitter() + geom_text_repel(aes(label=Geography))
+    } else if (input$year == "2018-19"){
+      ggplot(pwbestlocalauth, aes(pwb, `2018-19`, color=Geography)) + geom_point() + geom_smooth(alpha=0.2,method='lm') + 
+        labs(x = "Personal Wellbeing Measures",
+               y = "Scores", title = "Personal Wellbeing Scores") + geom_jitter() + geom_text_repel(aes(label=Geography))
+    } else if (input$year == "2019-20"){
+      ggplot(pwbestlocalauth, aes(pwb, `2019-20`, color=Geography)) + geom_point() + geom_smooth(alpha=0.2,method='lm') + 
+        labs(x = "Personal Wellbeing Measures",
+               y = "Scores", title = "Personal Wellbeing Scores") + geom_jitter() + geom_text_repel(aes(label=Geography))
+    } else if (input$year == "2020-21"){
+      ggplot(pwbestlocalauth, aes(pwb,`2020-21`, color=Geography)) + geom_point() + geom_smooth(alpha=0.2,method='lm') + 
+        labs(x = "Personal Wellbeing Measures",
+               y = "Scores", title = "Personal Wellbeing Scores") + geom_jitter() + geom_text_repel(aes(label=Geography))
+    }
   })
 })
 
-shinyApp(ui=ui,server=server)
+shinyApp(ui, server)
 ```
 
 
