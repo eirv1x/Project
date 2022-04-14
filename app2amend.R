@@ -38,15 +38,25 @@ ui <- shinyUI(fluidPage(
 server <- shinyServer(function(input,output){
   output$scatterplot <- renderPlot({
     if (input$year == "2016-17"){
-      ggplot(pwblaclean, aes(pwb,`2016-17`)) + geom_point()
+      ggplot(pwblaclean, aes(pwb,`2016-17`, color=Geography)) + geom_point() + geom_smooth(alpha=0.2,method='lm') +
+        + labs(x = "Personal Wellbeing Measures",
+               y = "Scores", title = "Personal Wellbeing Scores") + geom_jitter() + geom_text_repel(aes(label=Geography))
     } else if(input$year == "2017-18"){
-      ggplot(pwblaclean, aes(pwb,`2017-18`)) + geom_point()
+      ggplot(pwblaclean, aes(pwb,`2017-18`, color=Geography)) + geom_point() + geom_smooth(alpha=0.2,method='lm') + 
+        + labs(x = "Personal Wellbeing Measures",
+               y = "Scores", title = "Personal Wellbeing Scores") + geom_jitter() + geom_text_repel(aes(label=Geography))
     } else if (input$year == "2018-19"){
-      ggplot(pwblaclean, aes(pwb, `2018-19`)) + geom_point()
+      ggplot(pwblaclean, aes(pwb, `2018-19`, color=Geography)) + geom_point() + geom_smooth(alpha=0.2,method='lm') + 
+        + labs(x = "Personal Wellbeing Measures",
+               y = "Scores", title = "Personal Wellbeing Scores") + geom_jitter() + geom_text_repel(aes(label=Geography))
     } else if (input$year == "2019-20"){
-      ggplot(pwblaclean, aes(pwb, `2019-20`)) + geom_point()
+      ggplot(pwblaclean, aes(pwb, `2019-20`, color=Geography)) + geom_point() + geom_smooth(alpha=0.2,method='lm') + 
+        + labs(x = "Personal Wellbeing Measures",
+               y = "Scores", title = "Personal Wellbeing Scores") + geom_jitter() + geom_text_repel(aes(label=Geography))
     } else if (input$year == "2020-21"){
-      ggplot(pwblaclean, aes(pwb,`2020-21`)) + geom_point()
+      ggplot(pwblaclean, aes(pwb,`2020-21`, color=Geography)) + geom_point() + geom_smooth(alpha=0.2,method='lm') + 
+        labs(x = "Personal Wellbeing Measures",
+               y = "Scores", title = "Personal Wellbeing Scores") + geom_jitter() + geom_text_repel(aes(label=Geography))
     }
   })
 })
