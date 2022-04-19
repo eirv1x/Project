@@ -36,7 +36,7 @@ ui <- shinyUI(fluidPage(
 #now to instruct the server what to display 
 server <- shinyServer(function(input,output){
   output$scatterplot <- renderPlot({ #ggplot used to create a scatterplot of the data depending on year picked by user
-   ggplot(data=pwblaclean, mapping = aes(x= pwb, y=input$year, color = Geography)) + geom_point() + geom_smooth(alpha=0.2, method = 'lm') + labs(x = "Personal Wellbeing Measures",
+   ggplot(pwblaclean, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point() + geom_smooth(alpha=0.2, method = 'lm') + labs(x = "Personal Wellbeing Measures",
                                                                                                                                                  y = "Scores", title = "Personal Wellbeing Scores") + geom_jitter() + geom_text_repel(aes(label=Geography))
   })
 })
