@@ -39,7 +39,7 @@ head(pwbestlocalauth)
 
 #remove rows from dataset
 pwbestlocalauth <- pwbestlocalauth[-c(1,2),]
-head(pwbestlocalauth)
+#head(pwbestlocalauth)
 ```
 
 ```{r scatterplot}
