@@ -18,6 +18,29 @@ library(ggrepel)
 
 This is my practice file for the Data Visualisation Module
 
+## Data Origins 
+
+### Where is the data from?
+The Office for National Statistics (ONS)
+
+### How was it collected?
+This data was collected through the Annual Population Survey (APS)
+
+### What do the variables mean?
+The variables in the dataset include: 'Anxiety', 'Life Satisfaction', 'Worthwhile', and 'Happiness'. These variables are the four factors used to measure personal well-being. 
+For 'Anxiety', higher scores indicate lower personal well-being. 
+For 'Life satisfaction', 'Worthwhile', and 'Happiness', high scores equal high personal well-being. 
+
+## Research Questions
+My research question for visualisation of the data is : 
+My visualisation attempts to demonstrate the differences in personal well-being between different countries for every year since 2016-2017, to the current year. 
+
+## Data Preparation
+How was the data cleaned?
+Were outliers excluded?
+Summary of statistics, grouped variables etc. 
+Show the first few rows of processed data... (+show the code which does this where relevant)
+
 ```{r dataimport}
 #importing of the data
 
@@ -42,13 +65,24 @@ pwbestlocalauth <- pwbestlocalauth[-c(1,2),]
 #head(pwbestlocalauth)
 ```
 
+## Visualisations
+-inlude a document explaining any motivation (although good graph labelling is better than an explanation in the accompanying text.)
+The code for producing these graphs. 
+
+##Graphs/Graph
+
 ```{r scatterplot}
+
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7") #use of colourblind palette 
+
 p <- ggplot(pwbestlocalauth,aes(x=pwb,y=`2016-17`,color = Geography))
-p + geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures",
-                                                                 y = "Scores", title = "Personal Wellbeing Scores in 2016-2017") + geom_jitter(height=0,width=.1,alpha=.5) + geom_text_repel(aes(label=Geography))
+p + geom_point() + geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures",
+                                                                 y = "Scores", title = "Personal Wellbeing Scores in 2016-2017") + scale_colour_manual(values=cbPalette) + geom_text_repel(aes(label=Geography))
 
 ggsave(here("figs", "16-17plot.png"))
 ```
+
+##Shiny interactive graph:
 
 ```{r Shiny}
 
@@ -71,7 +105,7 @@ ui <- shinyUI(fluidPage(
 #now to instruct the server what to display 
 server <- shinyServer(function(input,output){
   output$scatterplot <- renderPlot({#ggplot used to create a scatterplot of the data depending on year picked by user
-   ggplot(pwbestlocalauth, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point() + geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures", y = "Scores", title = "Personal Wellbeing Scores") + geom_text_repel(aes(label=Geography))
+   ggplot(pwbestlocalauth, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point() + geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures", y = "Scores", title = "Personal Wellbeing Scores") + geom_text_repel(aes(label=Geography)) + scale_colour_manual(values=cbPalette)
   })
 })
 
@@ -79,7 +113,12 @@ shinyApp(ui, server)
 ```
 
 
-# Discussion
+# Summary
+
+## Needed
+brief thoughts on what yoy have learnt, what you might do next if you had more time/more data
+
+
 
 This practice project has enabled me to produce simple ggplots with my data, as well as creating a shiny interface where different graphs can be shown based on the year a user is interested in.
 

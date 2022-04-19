@@ -16,6 +16,8 @@ pwbestlocalauth <- pwbestlocalauth %>% #selected columns of focus in dataframe
 pwblaclean <- pwbestlocalauth[-c(1,2),] #removed columns to clean dataframe
 View(pwblaclean)
 
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
 #creating a shiny app to display personal wellbeing scores for each geographical area in the UK for each year  
 ui <- shinyUI(fluidPage(
   titlePanel("Personal Wellbeing Scores across the UK"),
@@ -36,7 +38,7 @@ ui <- shinyUI(fluidPage(
 #now to instruct the server what to display 
 server <- shinyServer(function(input,output){
   output$scatterplot <- renderPlot({ #ggplot used to create a scatterplot of the data depending on year picked by user
-   ggplot(pwblaclean, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point() + geom_smooth(alpha=0.2, method = 'lm') + labs(x = "Personal Wellbeing Measures",
+   ggplot(pwblaclean, aes(x= pwb, y=get(input$year), color = Geography)) + scale_colour_manual(values=cbPalette) + geom_point() + geom_smooth(alpha=0.2, method = 'lm') + labs(x = "Personal Wellbeing Measures",
                                                                                                                                                  y = "Scores", title = "Personal Wellbeing Scores") + geom_text_repel(aes(label=Geography)) 
   })
 })
