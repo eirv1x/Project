@@ -14,6 +14,11 @@ library(shiny)
 library(ggrepel)
 ```
 
+```{r data import}
+pwbestlocalauth <- read.csv(here("data", "pwbest_localauth_filtered.csv"))
+#head(pwbestlocalauth)
+```
+
 # My Practice project
 
 This is my practice file for the Data Visualisation Module
@@ -31,23 +36,16 @@ The variables in the dataset include: 'Anxiety', 'Life Satisfaction', 'Worthwhil
 For 'Anxiety', higher scores indicate lower personal well-being. 
 For 'Life satisfaction', 'Worthwhile', and 'Happiness', high scores equal high personal well-being. 
 
+### Show first few rows of raw data if possible
+
+```{r showing first few rows of raw data}
+head(pwbestlocalauth, 4)
+```
+
 ## Research Questions
-My research question for visualisation of the data is : 
 My visualisation attempts to demonstrate the differences in personal well-being between different countries for every year since 2016-2017, to the current year. 
 
 ## Data Preparation
-How was the data cleaned?
-Were outliers excluded?
-Summary of statistics, grouped variables etc. 
-Show the first few rows of processed data... (+show the code which does this where relevant)
-
-```{r dataimport}
-#importing of the data
-
-pwbestlocalauth <- read.csv(here("data", "pwbest_localauth_filtered.csv"))
-#head(df)
-```
-
 
 ```{r datawrangling}
 ##data wrangling is needed to rename and remove columns that are not necessary for visualisation
@@ -58,12 +56,20 @@ pwbestlocalauth <- pwbestlocalauth %>%
 # use select to just look at some columns
 pwbestlocalauth <- pwbestlocalauth %>% 
   select(Geography, pwb, '2016-17', '2017-18','2018-19', '2019-20', '2020-21')
-head(pwbestlocalauth)
+#head(pwbestlocalauth)
 
 #remove rows from dataset
 pwbestlocalauth <- pwbestlocalauth[-c(1,2),]
-#head(pwbestlocalauth)
+head(pwbestlocalauth, 3)
 ```
+
+Summary statistics - grouped variables etc. 
+
+```{r group statistics}
+
+
+```
+
 
 ## Visualisations
 -inlude a document explaining any motivation (although good graph labelling is better than an explanation in the accompanying text.)
@@ -76,7 +82,7 @@ The code for producing these graphs.
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7") #use of colourblind palette 
 
 p <- ggplot(pwbestlocalauth,aes(x=pwb,y=`2016-17`,color = Geography))
-p + geom_point() + geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures",
+p + geom_point(size=2.5) + geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures",
                                                                  y = "Scores", title = "Personal Wellbeing Scores in 2016-2017") + scale_colour_manual(values=cbPalette) + geom_text_repel(aes(label=Geography))
 
 ggsave(here("figs", "16-17plot.png"))
@@ -94,10 +100,13 @@ ui <- shinyUI(fluidPage(
                    label = "Please select a year:",
                    choices=c("2016-17" = "2016-17", "2017-18" = "2017-18","2018-19" = "2018-19", "2019-20" = "2019-20","2020-21" = "2020-21"),
                    selected = "2016-17" #automatically set on the year 2016-2017
-      )),
+      ),
+      h4("Scatterplot Key:"),
+      print("Low Anxiety Scores = High Personal Well-being,
+            Low Measures on other Variables = High Personal Well-being")),
     
     mainPanel(
-      plotOutput("scatterplot") #output should be a scatter plot
+      plotOutput("scatterplot")
     )
   )
 ))
@@ -105,8 +114,11 @@ ui <- shinyUI(fluidPage(
 #now to instruct the server what to display 
 server <- shinyServer(function(input,output){
   output$scatterplot <- renderPlot({#ggplot used to create a scatterplot of the data depending on year picked by user
-   ggplot(pwbestlocalauth, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point() + geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures", y = "Scores", title = "Personal Wellbeing Scores") + geom_text_repel(aes(label=Geography)) + scale_colour_manual(values=cbPalette)
+   ggplot(pwbestlocalauth, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point(shape=1, size=3) + geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures", y = "Scores", title = "Personal Wellbeing Scores") + geom_text_repel(aes(label=Geography), force=25) + scale_colour_manual(values=cbPalette) + theme_light() + theme(text=element_text(color="black", size=11), legend.position = c("top"), legend.direction = "horizontal", axis.title.x=element_text(vjust=-1.5),
+                              legend.justification = 0.5, legend.text=element_text(size=11,color="black"), axis.line=element_line(color="black", size=0.2), axis.line.y=element_blank(),panel.grid.major=element_line(color="gray50", size=0.5), panel.grid.major.x = element_blank())
   })
+  
+  
 })
 
 shinyApp(ui, server)
