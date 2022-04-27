@@ -48,7 +48,10 @@ head(pwbestlocalauth, 4)
 
 # Research Questions
 What question(s) does my visualisation attempt to address?
-My visualization attempts to demonstrate the differences in personal well-being between different countries for every year since 2016-2017, to the current year. 
+ 
+1) How has personal wellbeing across UK countries, and the UK overall, fluctuated over recent years?
+
+2) Which UK countries appear to have a higher level of personal wellbeing each year? 
 
 # Data Preparation
 
@@ -153,6 +156,10 @@ server <- shinyServer(function(input,output){
 
 shinyApp(ui, server)
 ```
+
+Interpretation of Visualisation:
+
+Based on the Shiny graphs, it is evident that overall, Northern Ireland has higher PWB scores across all measures, in comparison to other UK countries. In comparison, Wales seems to have the worst PWB scores across all measures. 
 
 
 # Summary
