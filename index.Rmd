@@ -2,9 +2,9 @@
 output: html_document
 runtime: shiny
 ---
-<<<<<<< HEAD
+
 ---
-title: "index"
+title: "PSY6422 Project"
 author: "E Irving"
 date: "13/04/2022"
 output: html_document
@@ -19,19 +19,13 @@ library(shiny)
 library(ggrepel)
 ```
 
-```{r data import}
-pwbestlocalauth <- read.csv(here("data", "pwbest_localauth_filtered.csv"))
-#head(pwbestlocalauth)
-```
-
-# My Practice project
-
-This is my practice file for the Data Visualisation Module
-
-## Data Origins 
+# Data Origins 
 
 ### Where is the data from?
 The Office for National Statistics (ONS)
+
+Citation: Office for National Statistics. (2022,April). Personal Well-being estimates by local authority. https://www.ons.gov.uk/datasets/wellbeing-local-authority/editions/time-series/versions/2
+
 
 ### How was it collected?
 This data was collected through the Annual Population Survey (APS)
@@ -41,16 +35,22 @@ The variables in the dataset include: 'Anxiety', 'Life Satisfaction', 'Worthwhil
 For 'Anxiety', higher scores indicate lower personal well-being. 
 For 'Life satisfaction', 'Worthwhile', and 'Happiness', high scores equal high personal well-being. 
 
-### Show first few rows of raw data if possible
+#### Show first few rows of raw data if possible
+
+```{r data import}
+pwbestlocalauth <- read.csv(here("data", "pwbest_localauth_filtered.csv"))
+#head(pwbestlocalauth)
+```
 
 ```{r showing first few rows of raw data}
 head(pwbestlocalauth, 4)
 ```
 
-## Research Questions
-My visualisation attempts to demonstrate the differences in personal well-being between different countries for every year since 2016-2017, to the current year. 
+# Research Questions
+What question(s) does my visualisation attempt to address?
+My visualization attempts to demonstrate the differences in personal well-being between different countries for every year since 2016-2017, to the current year. 
 
-## Data Preparation
+# Data Preparation
 
 ```{r datawrangling}
 ##data wrangling is needed to rename and remove columns that are not necessary for visualisation
@@ -68,7 +68,7 @@ pwbestlocalauth <- pwbestlocalauth[-c(1,2),]
 head(pwbestlocalauth, 3)
 ```
 
-Summary statistics - grouped variables etc. 
+## Summary statistics - grouped variables etc. 
 
 ```{r group statistics}
 
@@ -76,11 +76,13 @@ Summary statistics - grouped variables etc.
 ```
 
 
-## Visualisations
+# Visualisations
 -inlude a document explaining any motivation (although good graph labelling is better than an explanation in the accompanying text.)
 The code for producing these graphs. 
 
-##Graphs/Graph
+## Visualisation 1
+
+A scatter plot to show the personal well-being data for the year 2016-17:
 
 ```{r scatterplot}
 
@@ -93,7 +95,9 @@ p + geom_point(size=2.5) + geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Per
 ggsave(here("figs", "16-17plot.png"))
 ```
 
-##Shiny interactive graph:
+## Visualisation 2
+
+Shiny interactive graph:
 
 ```{r Shiny}
 
@@ -109,16 +113,13 @@ ui <- shinyUI(fluidPage(
       ),
       radioButtons(inputId="filetype", label="Select the file type to download", choices = list("png","pdf")),
       downloadButton(outputId = "down", label = "Download plot")),
-      
-      
     
     mainPanel(
-      plotOutput("scatterplot")
+      plotOutput("scatterplot"),
+      textOutput("text")
     )
 )
 ))
-
-
 
 
 #now to instruct the server what to display 
@@ -127,6 +128,9 @@ server <- shinyServer(function(input,output){
    ggplot(pwbestlocalauth, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point(shape=1, size=3) + geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures", y = "Scores", title = "Personal Wellbeing Scores") + geom_text_repel(aes(label=Geography), force=25) + scale_colour_manual(values=cbPalette) + theme_light() + theme(text=element_text(color="black", size=11), legend.position = c("top"), legend.direction = "horizontal", axis.title.x=element_text(vjust=-1.5),
                               legend.justification = 0.5, legend.text=element_text(size=11,color="black"), axis.line=element_line(color="black", size=0.2), axis.line.y=element_blank(),panel.grid.major=element_line(color="gray50", size=0.5), panel.grid.major.x = element_blank())
   })
+  
+  output$text <- renderText({"Personal WellBeing (PWB) Scores Key:
+    Low anxiety = High PWB, Low happiness, satisfaction, worthwhile = Low PWB"})
   
   output$down <- downloadHandler(
     filename = function(){
@@ -153,11 +157,11 @@ shinyApp(ui, server)
 
 # Summary
 
-## Needed
-brief thoughts on what yoy have learnt, what you might do next if you had more time/more data
+What do I think the graph means?
 
+What have I learnt whilst doing this project?
 
-
+brief thoughts on what you have learnt, what you might do next if you had more time/more data
 This practice project has enabled me to produce simple ggplots with my data, as well as creating a shiny interface where different graphs can be shown based on the year a user is interested in.
 
 
