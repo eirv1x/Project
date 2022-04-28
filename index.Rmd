@@ -1,11 +1,17 @@
 ---
-output: html_document
+output: 
+  html_document: 
+    toc: yes
+    toc_float: true
+    smooth_scroll: false
+    theme: lumen
+    highlight: haddock
 runtime: shiny
 ---
 
 ---
 title: "PSY6422 Project"
-author: "E Irving"
+author: "210155305"
 date: "13/04/2022"
 output: html_document
 runtime: shiny
@@ -18,44 +24,42 @@ library(tidyverse)
 library(shiny)
 ```
 
-# Data Origins 
+# Data Origin
 
-### Where is the data from?
-The Office for National Statistics (ONS)
+I retrieved data from the Office for National Statistics (ONS), where I downloaded personal well-being scores from countries within the UK. This data had been collected through the Annual Population Survey (APS), consisting of a sample size of \~150,000.
 
-Citation: Office for National Statistics. (2022,April). Personal Well-being estimates by local authority. https://www.ons.gov.uk/datasets/wellbeing-local-authority/editions/time-series/versions/2
-
-
-### How was it collected?
-This data was collected through the Annual Population Survey (APS)
-
-### What do the variables mean?
-The variables in the dataset include: 'Anxiety', 'Life Satisfaction', 'Worthwhile', and 'Happiness'. These variables are the four factors used to measure personal well-being. 
-For 'Anxiety', higher scores indicate lower personal well-being. 
-For 'Life satisfaction', 'Worthwhile', and 'Happiness', high scores equal high personal well-being. 
-
-#### Show first few rows of raw data if possible
+Citation: Office for National Statistics. (2022,April). Personal Well-being estimates by local authority. <https://www.ons.gov.uk/datasets/wellbeing-local-authority/editions/time-series/versions/2>
 
 ```{r data import}
 pwbestlocalauth <- read.csv(here("data", "pwbest_localauth_filtered.csv"))
-#head(pwbestlocalauth) 
+head(pwbestlocalauth) 
 ```
+
+Within this dataset, personal-well being was measured based on four variables: 'Anxiety', 'Life Satisfaction', 'Worthwhile', and 'Happiness'. These variables represented average mean scores. For this data visualisation, I focused only on personal well-being scores from UK countries.
+
+#### The first few rows of raw data:
 
 ```{r showing first few rows of raw data}
 head(pwbestlocalauth, 4)
 ```
 
 # Research Questions
-What question(s) does my visualisation attempt to address?
- 
-1) How has personal well-being across UK countries, and the UK overall, fluctuated over recent years?
 
-2) On average, Which UK countries appear to have a higher level of personal well-being each year? 
+1)  How has personal well-being across UK countries, and the UK overall, fluctuated over recent years?
+
+2)  On average, Which UK countries appear to have a higher level of personal well-being each year?
 
 # Data Preparation
 
+Several steps were taken to process my data.
+
+1.  Renaming data columns
+2.  Removing unnecessarry columns e.g., threshold data
+3.  Removing unnecessary rows from the dataset
+
 ```{r datawrangling}
-#rename: change column/variable names to something appropriate
+
+#rename data
 pwbestlocalauth <- pwbestlocalauth %>% 
   rename(Geography = Title, pwb = X, '2016-17' = X.2, '2017-18' = X.6, '2018-19' = X.10, '2019-20' = X.14, '2020-21' = X.18)
 
@@ -66,24 +70,23 @@ pwbestlocalauth <- pwbestlocalauth %>%
 
 #remove rows from dataset
 pwbestlocalauth <- pwbestlocalauth[-c(1,2),]
-head(pwbestlocalauth, 3)
 ```
 
-## Summary statistics - grouped variables etc. 
+## Summary statistics - grouped variables etc.
+
+Table displaying average personal well-being scores from first 4 rows:
 
 ```{r group statistics}
-
-
+head(pwbestlocalauth, 4)
 ```
 
-
 # Visualisations
--inlude a document explaining any motivation (although good graph labelling is better than an explanation in the accompanying text.)
-The code for producing these graphs. 
+
+The shiny app created displays a scatterplot of the personal well-being scores of each country. The interactive feature of this graph enables a user to choose which year they would like to look at personal well-being scores for. The app also allows a user to download the plots.
 
 ## Visualisation 1
 
-A scatter plot to show the personal well-being data for the year 2016-17:
+A quick visualisation to test where the data points should lie on the scatterplot.
 
 ```{r scatterplot}
 
@@ -161,19 +164,21 @@ server <- shinyServer(function(input,output){
 shinyApp(ui, server)
 ```
 
-Interpretation of Visualisation:
+### Interpretation of Visualisation:
 
-Based on the Shiny graphs, it is evident that overall, Northern Ireland has higher PWB scores across all measures, in comparison to other UK countries. In comparison, Wales seems to have the worst PWB scores across all measures. 
-
+Based on the Shiny graphs, it is evident that overall, Northern Ireland has higher PWB scores across all measures, in comparison to other UK countries. In comparison, Wales seems to have the worst PWB scores across all measures.
 
 # Summary
 
-What do I think the graph means?
+What I have learnt:
 
-What have I learnt whilst doing this project?
+-   how to create a shiny interface to display different graphs based on a variable (year) within the dataset
+-   different ways of customising a scatterplot to appear more visually pleasing
 
-brief thoughts on what you have learnt, what you might do next if you had more time/more data
-This practice project has enabled me to produce simple ggplots with my data, as well as creating a shiny interface where different graphs can be shown based on the year a user is interested in.
+If I had more time to spend on this project:
 
+-   I would have found a way to use the click() feature, so that when a point on the plot was clicked on, the country and its equivalent personal-well being score for the specific measure would be displayed.
 
+# Resources used
 
+When completing this project the main resoruces I found helpful were stackoverflow.com and rStudio.com. In particular the cheatsheets provided on rStudio were extremely helpful for more simple code.
