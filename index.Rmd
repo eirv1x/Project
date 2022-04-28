@@ -35,7 +35,7 @@ pwbestlocalauth <- read.csv(here("data", "pwbest_localauth_filtered.csv"))
 head(pwbestlocalauth) 
 ```
 
-Within this dataset, personal-well being was measured based on four variables: 'Anxiety', 'Life Satisfaction', 'Worthwhile', and 'Happiness'. These variables represented average mean scores. For this data visualisation, I focused only on personal well-being scores from UK countries.
+Within this dataset, personal-well being was based on four measures: 'Anxiety', 'Life Satisfaction', 'Worthwhile', and 'Happiness'. These variables represented the average mean score from the dataset for each measure. For this data visualisation, I focused only on personal well-being scores from UK countries.
 
 #### The first few rows of raw data:
 
@@ -82,9 +82,9 @@ head(pwbestlocalauth, 4)
 
 # Visualisations
 
-The shiny app created displays a scatterplot of the personal well-being scores of each country. The interactive feature of this graph enables a user to choose which year they would like to look at personal well-being scores for. The app also allows a user to download the plots.
+The shiny app created displays a personal well-being scores of each country on a scatterplot. The interactive feature of this graph enables a user to choose which year they would like to view the data from. The app further allows a user to download the plots.
 
-## Visualisation 1
+## Test visualisation 
 
 A quick visualisation to test where the data points should lie on the scatterplot.
 
@@ -100,7 +100,7 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
 
 ## Visualisation 2
 
-Shiny interactive graph:
+Shiny interactive graph [link](http://127.0.0.1:5691/index.Rmd)
 
 ```{r Shiny}
 
@@ -174,11 +174,13 @@ What I have learnt:
 
 -   how to create a shiny interface to display different graphs based on a variable (year) within the dataset
 -   different ways of customising a scatterplot to appear more visually pleasing
+- the importance of annotating code so that others can understand what I have done, and why? As well as enabling others to then accruately reproduce the graphs that I have created. 
 
 If I had more time to spend on this project:
 
 -   I would have found a way to use the click() feature, so that when a point on the plot was clicked on, the country and its equivalent personal-well being score for the specific measure would be displayed.
+- I would also have created more visualisations, to show personal well-being scores from specific georgraphical locations. For example, counties within the UK, as well as countries. 
 
 # Resources used
 
-When completing this project the main resoruces I found helpful were stackoverflow.com and rStudio.com. In particular the cheatsheets provided on rStudio were extremely helpful for more simple code.
+When completing this project the main resoruces I found helpful were [stackoverflow.com](https://stackoverflow.com/) and [rStudio.com](https://www.rstudio.com/). In particular the cheatsheets provided on rStudio were extremely helpful for more simple code.
