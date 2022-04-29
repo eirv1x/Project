@@ -26,13 +26,11 @@ library(shiny)
 
 # Research Questions
 
-1)  How has personal well-being across UK countries, and the UK overall, fluctuated over recent years?
+1)  On average, which UK countries appear to have a higher level of personal well-being each year?
 
-2)  On average, which UK countries appear to have a higher level of personal well-being each year?
+2)  How has personal well-being across UK countries, and the UK overall, fluctuated over recent years?
 
 # Data Origin
-
-
 
 ![Office for National Statistics (ONS)](attic\ONS.png)
 
@@ -114,6 +112,8 @@ cbPalette  | A colour blind palette
 
 # Visualisations
 
+I chose to use a scatterplot as it allowed me to plot the average(mean) personal well-being points for each measure, on the same graph, and clearly highlight the country linked to each point, through the use of a colour coded legend. This would then allow for a clear comparison between the countries scores on personal well-being measures, to see which country had better personal well-being.  
+
 ## Test visualisation 
 
 I first did a test visualisation, where I created a simple scatterplot to show the personal well-being scores from the year 2016-2017. This allowed me to ensure that when doing my final visualisation the points plotted on the graph were accurate.
@@ -138,7 +138,7 @@ ggsave(here("figs", "1617test.png"))
 ```
 ## Visualisation 2
 
-The shiny app created displays personal well-being scores of each country on a scatterplot. The interactive feature of this graph enables a user to choose which year they would like to view the data from. The app further allows a user to download the plots to their own device.
+I expanded the above code, creating a shiny app to display personal well-being scores of each country, with an interactive feature to enable a user to choose which year they would like to view personal well-being data from. Doing so allowed for comparisons of the data points through the visualisation, allowing the assessment of fluctuations of personal well-being in the UK, across the years. The app further allows a user to download the plots to their own device.
 
 Shiny interactive graph:
 
@@ -191,7 +191,7 @@ server <- shinyServer(function(input,output){
       if(input$filetype == "png")
         png(file)
       else
-        pdf(file) 
+        pdf(file) #copied ggplot code for scatterplot as could not be attributed to a variable and then used within the plot() function
       plot(ggplot(pwbclean, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point(size=3, position=position_jitter(h=.15,w=.14)) +  geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures", y = "Scores", title = "Personal Wellbeing Scores") + scale_colour_manual(values=cbPalette) + theme_light() + theme(text=element_text(color="black", size=11), legend.position = c("top"), legend.direction = "horizontal", axis.title.x=element_text(vjust=-1.5),
                               legend.justification = 0.5, legend.text=element_text(size=11,color="black"), axis.line=element_line(color="black", size=0.2), axis.line.y=element_blank(),panel.grid.major=element_line(color="gray50", size=0.5), panel.grid.major.x = element_blank()))
   dev.off()
@@ -207,11 +207,14 @@ shinyApp(ui, server)
 
 ### Interpretation of Visualisation:
 
+> Research Question 1
+
 #### Highest Personal Well-Being Score in the UK:
 
 
 Based on the Shiny graphs, it is evident that overall, Northern Ireland has consistently higher personal well-being scores across all measures over the years, in comparison to other UK countries.
 
+> Research Question 2
 
 #### Fluctuations of personal well-being over time in the UK:
 
