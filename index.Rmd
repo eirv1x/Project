@@ -53,13 +53,13 @@ Within this dataset, personal-well being was based on four measures: 'Anxiety', 
 
 
 Personal Well-Being Measure|Related Scale Question used in APS
-------------------------|--------------------------------------
-Anxiety|'How anxious did you feel yesterday?'
-Life Satisfaction|'How satisifed are you with your life nowadays?'
-Happiness|'How happy did you feel yesterday?'
-Worthwhile|'To what extent do you feel the things you do in life are worthwhile?'
+------------------------|-------------------------------------
+Anxiety | 'How anxious did you feel yesterday?'
+Life Satisfaction | 'How satisfied are you with your life nowadays?'
+Happiness | 'How happy did you feel yesterday?'
+Worthwhile | 'To what extent do you feel the things you do in life are worthwhile?'
 
-For the full details of the dataset visit the [ONS Personal Well-Being page.](https://www.ons.gov.uk/datasets/wellbeing-local-authority/editions/time-series/versions/2)
+> For the full details of the dataset visit the [ONS Personal Well-Being page.](https://www.ons.gov.uk/datasets/wellbeing-local-authority/editions/time-series/versions/2)
 
 #### The first few rows of raw data:
 
@@ -72,7 +72,7 @@ head(pwbdata, 4)
 For this data visualization, I focused only on the average personal well-being scores from UK countries.
 Several steps were therefore necessary to process my data.
 
-1.  Renaming data columns - to more appropriate and understandable names. For example, 'X.2' becomes '2016-17'
+1.  Renaming data columns to more appropriate and understandable names. For example, 'X.2' becomes '2016-17'
 2.  Removing unnecessarry columns e.g., upper/lower limits data, geography code, estimate
 3.  Removing unnecessary rows from the dataset to make it cleaner e.g., rows containing no valuable information
 
@@ -104,12 +104,12 @@ head(pwbclean, 4)
 
 Code Names | Definitions of Code Variables
 -----------|-------------------
-pwb|Personal Well Being
-pwbdata|The original personal well-being data, before it was processed
-pwbclean|The personal well-being data, after it was processed and cleaned
-Year|The year equivalent to when the data was collected.
-Geography|The country from which the data was collected. 
-cbPalette|A colour blind palette
+pwb        | Personal Well Being
+pwbdata    | The original personal well-being data, before it was processed
+pwbclean   | The personal well-being data, after it was processed and cleaned
+Year       | The year equivalent to when the data was collected.
+Geography  | The country from which the data was collected. 
+cbPalette  | A colour blind palette
 
 
 # Visualisations
@@ -207,33 +207,38 @@ shinyApp(ui, server)
 
 ### Interpretation of Visualisation:
 
-Based on the Shiny graphs, it is evident that overall, Northern Ireland has consistently higher PWB scores across all measures over the years, in comparison to other UK countries. 
+#### Highest Personal Well-Being Score in the UK:
 
-Individual Measures:
 
-Anxiety - It appears that Wales consistently has higher ratings overall. Except for the year 2019-20 where Scotland had the highest Anxiety score. This is interesting given that in 2019-20 the COVID pandemic started, therefore this could be an interesting future direction to look at. Did COVID-19 have an impact on countries Anxiety levels?
+Based on the Shiny graphs, it is evident that overall, Northern Ireland has consistently higher personal well-being scores across all measures over the years, in comparison to other UK countries.
 
-Happiness - Scotland consistently showed the lowest Happiness ratings, except for 2017-18 where Wales had the lowest. 
 
-Life Satisfaction - Throughout the years, the lowest Life Satisfaction rating has constantly changed between UK countries.
+#### Fluctuations of personal well-being over time in the UK:
 
-Worthwhile - Scotland mainly had the lowest worthwhile scores. However, in 2017-18 the low score was consistent across UK countries, with the exception of Northern Ireland. Furthermore, in 2019-20, Scotland actually appeared to have the second highest Worthwhile score, with Wales and England coming in lower. This again could relate to the impact of COVID-19 and further research exploring this could be interesting. 
 
-These findings are important as they can help inform the policy-making process with which countries need more help with their personal well-being than others.Based on the interpretation of the visualisation created, Northern Ireland seems to need less help with their personal well-being. Whilst Scotland and Wales could benefit more from interventions to improve their overall personal well-being. 
+**Anxiety** - It appears that *Wales* consistently has higher ratings overall. Except for the year 2019-20 where *Scotland* had the highest Anxiety score. This is interesting given that in 2019-20 the COVID pandemic started, therefore this could be an interesting future direction to look at. Did COVID-19 have an impact on countries Anxiety levels?
+
+**Happiness** - *Scotland* consistently showed the lowest Happiness ratings, except for 2017-18 where Wales had the lowest. 
+
+**Life Satisfaction** - Throughout the years, the lowest Life Satisfaction rating has constantly changed between UK countries.
+
+**Worthwhile** - *Scotland* mainly had the lowest worthwhile scores. However, in 2017-18 the low score was consistent across UK countries, with the exception of *Northern Ireland*. Furthermore, in 2019-20, *Scotland* actually appeared to have the second highest Worthwhile score, with *Wales* and *England* coming in below. This again could relate to the impact of COVID-19 and further research exploring this would be interesting. 
+
+These findings are important as they can help inform the policy-making process, shedding light on the countries that need more help with their personal well-being than others.  Based on the interpretation of the visualization created, **Northern Ireland** seems to need less help with their personal well-being. Whilst **Scotland** and **Wales** could possibly benefit from interventions to improve their overall personal well-being. 
 
 # Summary
 
-What I have learnt:
+### What I have learnt:
 
 -   how to create a shiny interface to display different graphs based on a variable (year) within the dataset
--   different ways of customising a scatterplot to appear more visually pleasing
-- the importance of annotating code so that others can understand what I have done, and why? As well as enabling others to then accruately reproduce the graphs that I have created.
+-   different ways of customizing a scatterplot to appear more visually pleasing
+- the importance of annotating code so that others can understand what I have done, and why? As well as enabling others to then accurately reproduce the graphs that I have created.
 - that it is necessary to be very specific in what you are asking R to do. For example, when setting up my scatterplot originally using 'y=year', R would not retrieve the right data and so using 'y=get(year)' was necessary to ensure that R understood the specific data I wanted to use for my scatterplot. 
 
-If I had more time to spend on this project:
+### If I had more time to spend on this project:
 
 -   I would have found a way to use the click() feature, so that when a point on the plot was clicked on, the country and its equivalent personal-well being score for the specific measure would be displayed.
-- I would also have created more visualisations, to show personal well-being scores from specific georgraphical locations. For example, counties within the UK, as well as countries. 
+- I would also have created more visualisations, to show personal well-being scores from specific geographical locations. For example, counties within the UK, as well as countries. 
 
 # Resources used
 
