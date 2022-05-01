@@ -174,7 +174,7 @@ server <- shinyServer(function(input,output){
    ggplot(pwbclean, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point(size=3, position=position_jitter(h=.15,w=.14)) +  #get() is necessary to retrieve specific column data, without this r selects the y-value as a single parameter rather than entire column data  #jitter was used as points overlapped
       geom_smooth(alpha=0.3, method = 'lm') + 
       #customisation of plot for better visualisation
-      labs(x = "Personal Wellbeing Measures", y = "Scores", title = "Personal Wellbeing Scores") + scale_colour_manual(values=cbPalette) + theme_light() + theme(text=element_text(color="black", size=11), legend.position = c("top"), legend.direction = "horizontal", axis.title.x=element_text(vjust=-1.5),
+      labs(x = "Personal Wellbeing Measures", y = "Scores", title = "Personal Wellbeing Scores") +  scale_colour_manual(values=cbPalette) + theme_light() + theme(text=element_text(color="black", size=11), legend.position = c("top"), legend.direction = "horizontal", axis.title.x=element_text(vjust=-1.5),
                               legend.justification = 0.5, legend.text=element_text(size=11,color="black"), axis.line=element_line(color="black", size=0.2), axis.line.y=element_blank(),panel.grid.major=element_line(color="gray50", size=0.5), panel.grid.major.x = element_blank())
   })
   
@@ -241,8 +241,8 @@ These findings are important as they can help inform the policy-making process, 
 ### If I had more time to spend on this project:
 
 -   I would have found a way to use the click() feature, so that when a point on the plot was clicked on, the country and its equivalent personal-well being score for the specific measure would be displayed.
-- I struggled with creating a scale for the y-axis of my plot, due to the input being a string ('year'). Therefore, if I had more time I would have scaled the y-axis so that the points on the y-axis went up in the same amount of intervals for each year plot. This would have allowed for better comparison between the plots for each year, and so the fluctuations of personal well-being from each year could be better identified. 
-- I would also have created more visualisations, to show personal well-being scores from specific geographical locations. For example, counties within the UK, as well as countries. 
+- I struggled with creating a scale for the y-axis of my plot, due to data being discrete variables. Therefore, if I had more time I would have scaled the y-axis so that the points on the y-axis went up in the same amount of intervals for each year plot. This would have allowed for better comparison between the plots for each year, and so the fluctuations of personal well-being from each year could be better identified. 
+- I would also have created more visualizations, to show personal well-being scores from specific geographical locations. For example, counties within the UK, as well as countries. 
 
 # Resources used
 
