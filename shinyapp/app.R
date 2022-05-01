@@ -2,13 +2,14 @@ ui <- shinyUI(fluidPage(
   titlePanel("Personal Wellbeing Scores across the UK"),
   sidebarLayout(
     sidebarPanel(
+      h1("Selection Panel"),
       radioButtons(inputId = "year", #created a button panel for the user to select the year they wish to view
                    label = "Please select a year:",
                    choices=c("2016-17" = "2016-17", "2017-18" = "2017-18","2018-19" = "2018-19", "2019-20" = "2019-20","2020-21" = "2020-21"),
                    
                    selected = "2016-17" #automatically set on the year 2016-2017
       ),
-      radioButtons(inputId="filetype", label="Select the file type to download", choices = list("png","pdf")),#buttonpanel to choose file type to download plot
+      radioButtons(inputId="filetype", label="Select the file type to download", choices = list("png","pdf")),#buttonpanel to choose type of file to download 
       downloadButton(outputId = "down", label = "Download plot")),
     
     mainPanel(
@@ -24,11 +25,11 @@ ui <- shinyUI(fluidPage(
 #instructions for server of what to display
 server <- shinyServer(function(input,output){
   output$scatterplot <- renderPlot({#ggplot used to create a scatterplot of the data depending on year picked by user
-    ggplot(pwbestlocalauth, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point(size=3, position=position_jitter(h=.15,w=.12)) +  #jitter was used as points overlapped
+    ggplot(pwbclean, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point(size=3, position=position_jitter(h=.15,w=.14)) +  #get() is necessary to retrieve specific column data, without this r selects the y-value as a single parameter rather than entire column data  #jitter was used as points overlapped
       geom_smooth(alpha=0.3, method = 'lm') + 
       #customisation of plot for better visualisation
-      labs(x = "Personal Wellbeing Measures", y = "Scores", title = "Personal Wellbeing Scores") + scale_colour_manual(values=cbPalette) + theme_light() + theme(text=element_text(color="black", size=11), legend.position = c("top"), legend.direction = "horizontal", axis.title.x=element_text(vjust=-1.5),
-                                                                                                                                                                 legend.justification = 0.5, legend.text=element_text(size=11,color="black"), axis.line=element_line(color="black", size=0.2), axis.line.y=element_blank(),panel.grid.major=element_line(color="gray50", size=0.5), panel.grid.major.x = element_blank())
+      labs(x = "Personal Wellbeing Measures", y = "Scores", title = "Personal Wellbeing Scores") +  scale_colour_manual(values=cbPalette) + theme_light() + theme(text=element_text(color="black", size=11), legend.position = c("top"), legend.direction = "horizontal", axis.title.x=element_text(vjust=-1.5),
+                                                                                                                                                                  legend.justification = 0.5, legend.text=element_text(size=11,color="black"), axis.line=element_line(color="black", size=0.2), axis.line.y=element_blank(),panel.grid.major=element_line(color="gray50", size=0.5), panel.grid.major.x = element_blank())
   })
   
   #text used to display a key for the data
@@ -44,9 +45,9 @@ server <- shinyServer(function(input,output){
       if(input$filetype == "png")
         png(file)
       else
-        pdf(file) 
-      plot(ggplot(pwbestlocalauth, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point(size=3, position=position_jitter(h=.15,w=.12)) +  geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures", y = "Scores", title = "Personal Wellbeing Scores") + scale_colour_manual(values=cbPalette) + theme_light() + theme(text=element_text(color="black", size=11), legend.position = c("top"), legend.direction = "horizontal", axis.title.x=element_text(vjust=-1.5),
-                                                                                                                                                                                                                                                                                                                                                        legend.justification = 0.5, legend.text=element_text(size=11,color="black"), axis.line=element_line(color="black", size=0.2), axis.line.y=element_blank(),panel.grid.major=element_line(color="gray50", size=0.5), panel.grid.major.x = element_blank()))
+        pdf(file) #copied ggplot code for scatterplot as could not be attributed to a variable and then used within the plot() function
+      plot(ggplot(pwbclean, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point(size=3, position=position_jitter(h=.15,w=.14)) +  geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures", y = "Scores", title = "Personal Wellbeing Scores") + scale_colour_manual(values=cbPalette) + theme_light() + theme(text=element_text(color="black", size=11), legend.position = c("top"), legend.direction = "horizontal", axis.title.x=element_text(vjust=-1.5),
+                                                                                                                                                                                                                                                                                                                                                 legend.justification = 0.5, legend.text=element_text(size=11,color="black"), axis.line=element_line(color="black", size=0.2), axis.line.y=element_blank(),panel.grid.major=element_line(color="gray50", size=0.5), panel.grid.major.x = element_blank()))
       dev.off()
     }
   )
