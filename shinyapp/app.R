@@ -1,3 +1,27 @@
+library(tidyverse) #packages required
+library(here)
+library(shiny)
+
+pwbdata <- read.csv(here("data", "pwbest_localauth_filtered.csv")) #import data
+
+##Data preparation
+
+#rename data
+pwbdata <- pwbdata %>% 
+  rename(Geography = Title, pwb = X, '2016-17' = X.2, '2017-18' = X.6, '2018-19' = X.10, '2019-20' = X.14, '2020-21' = X.18)
+
+# use select to only look at some columns
+pwbdata <- pwbdata %>% 
+  select(Geography, pwb, '2016-17', '2017-18','2018-19', '2019-20', '2020-21')
+#head(pwbdata)
+
+#remove rows from dataset
+pwbclean <- pwbdata [-c(1,2),]
+
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7") #use of colourblind palette
+
+#shiny interactive graph
+
 ui <- shinyUI(fluidPage(
   titlePanel("Personal Wellbeing Scores across the UK"),
   sidebarLayout(
