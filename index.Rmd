@@ -18,11 +18,13 @@ runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE) ##packages needed
+knitr::opts_chunk$set(echo = TRUE) ##packages needed
 library(here)
 library(tidyverse)
 library(shiny)
 ```
+
+# Personal Well-Being in the UK from 2016-2021
 
 # Research Questions
 
@@ -90,9 +92,9 @@ pwbclean <- pwbdata [-c(1,2),]
 ```
 
 
-## Summary statistics - grouped variables etc.
+## Summary statistics
 
-Table displaying average personal well-being scores from first 4 rows:
+Table displaying first 4 rows of prepared average personal well-being data:
 
 ```{r group statistics}
 head(pwbclean, 4)
@@ -128,7 +130,7 @@ p + geom_point(size=2.5) + geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Per
 
 ```
 
-As a jitter was not used, not all the points could be seen as some overlapped. Therefore, I added in a jitter to my test visualisation. I played around with the exact height and width of the jitter until I found one that displayed each point perfectly, without being jittered too much. 
+The first test visualisation did not plot the points accurately, as not all points were displayed. Therefore, a jitter was used to solve this. I played around with the exact height and width of the jitter until I found one that displayed each point perfectly, without being jittered too much. 
 
 ```{r test}
 
@@ -136,6 +138,9 @@ p <- ggplot(pwbclean,aes(x=pwb,y=`2016-17`,color = Geography))
 p + geom_point(size=2.5,position=position_jitter(h=.15,w=.14)) + geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures",y = "Scores", title = "Personal Wellbeing Scores in 2016-2017") + scale_colour_manual(values=cbPalette)
 ggsave(here("figs", "1617test.png"))
 ```
+
+By adding in a jitter, you can now see all points on the graph for each geographical location. Therefore, when running my final visualisation I know to use a jitter to ensure that the points plotted on my graph are exact.
+
 ## Visualisation 2
 
 I expanded the above code, creating a shiny app to display personal well-being scores of each country, with an interactive feature to enable a user to choose which year they would like to view personal well-being data from. Doing so allowed for comparisons of the data points through the visualisation, allowing the assessment of fluctuations of personal well-being in the UK, across the years. The app further allows a user to download the plots to their own device.
@@ -219,7 +224,7 @@ Based on the Shiny graphs, it is evident that overall, Northern Ireland has cons
 #### Fluctuations of personal well-being over time in the UK:
 
 
-**Anxiety** - It appears that *Wales* consistently has higher ratings overall. Except for the year 2019-20 where *Scotland* had the highest Anxiety score. This is interesting given that in 2019-20 the COVID pandemic started, therefore this could be an interesting future direction to look at. Did COVID-19 have an impact on countries Anxiety levels?
+**Anxiety** - It appears that *Wales* consistently has higher ratings overall. Except for the year 2019-20 where *Scotland* had the highest Anxiety score. This is interesting given that in 2019-20 the COVID-19 pandemic started, therefore this could be an interesting future direction to look at. Did COVID-19 have an impact on countries Anxiety levels?
 
 **Happiness** - *Scotland* consistently showed the lowest Happiness ratings, except for 2017-18 where Wales had the lowest. 
 
@@ -241,7 +246,7 @@ These findings are important as they can help inform the policy-making process, 
 ### If I had more time to spend on this project:
 
 -   I would have found a way to use the click() feature, so that when a point on the plot was clicked on, the country and its equivalent personal-well being score for the specific measure would be displayed.
-- I struggled with creating a scale for the y-axis of my plot, due to data being discrete variables. Therefore, if I had more time I would have scaled the y-axis so that the points on the y-axis went up in the same amount of intervals for each year plot. This would have allowed for better comparison between the plots for each year, and so the fluctuations of personal well-being from each year could be better identified. 
+- I struggled with creating a scale for the y-axis of my plot, due to having discrete variables in my dataset. Therefore, if I had more time I would have scaled the y-axis so that the points on the y-axis went up in the same amount of intervals for each year plot. This would have allowed for better comparison between the plots for each year, and so the fluctuations of personal well-being from each year could be better identified. 
 - I would also have created more visualizations, to show personal well-being scores from specific geographical locations. For example, counties within the UK, as well as countries. 
 
 # Resources used
