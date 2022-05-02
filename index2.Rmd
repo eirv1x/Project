@@ -1,0 +1,254 @@
+---
+output: 
+  html_document: 
+    toc: yes
+    toc_float: true
+    smooth_scroll: false
+    theme: lumen
+    highlight: haddock
+---
+---
+title: "index2.Rmd"
+author: "210155305"
+date: "02/05/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE) ##packages needed
+library(here)
+library(tidyverse)
+library(shiny)
+```
+
+# Personal Well-Being in the UK from 2016-2021
+
+# Research Questions
+
+1)  On average, which UK countries appear to have a higher level of personal well-being each year?
+
+2)  How has personal well-being across UK countries, and the UK overall, fluctuated over recent years?
+
+# Data Origin
+
+![Office for National Statistics (ONS)](attic\ONS.png)
+
+### Personal Well-Being estimates by local authority
+
+I retrieved data from the Office for National Statistics (ONS), where I filtered it and then downloaded it into a .csv file. The data consisted of personal well-being scores from countries within the UK. This data had been collected through the Annual Population Survey (APS), consisting of a sample size of \~150,000.
+
+Citation: Office for National Statistics. (2022,April). Personal Well-being estimates by local authority. <https://www.ons.gov.uk/datasets/wellbeing-local-authority/editions/time-series/versions/2>
+
+```{r data import}
+pwbdata <- read.csv(here("data", "pwbest_localauth_filtered.csv")) #load dataset
+#head(pwbdata) #check data is as expected
+```
+
+### Personal Well-Being Measures 
+
+Within this dataset, personal-well being was based on four measures: 'Anxiety', 'Life Satisfaction', 'Worthwhile', and 'Happiness'. Within the dataset used, the score for each variable was an average mean of all data collected. These scores were based on an 11-point scale where '0' = "not at all" and '10' = "completely". Questions can be seen below:
+
+
+Personal Well-Being Measure|Related Scale Question used in APS
+------------------------|-------------------------------------
+Anxiety | 'How anxious did you feel yesterday?'
+Life Satisfaction | 'How satisfied are you with your life nowadays?'
+Happiness | 'How happy did you feel yesterday?'
+Worthwhile | 'To what extent do you feel the things you do in life are worthwhile?'
+
+> For the full details of the dataset visit the [ONS Personal Well-Being page.](https://www.ons.gov.uk/datasets/wellbeing-local-authority/editions/time-series/versions/2)
+
+#### The first few rows of raw data:
+
+```{r showing first few rows of raw data}
+head(pwbdata, 4)
+```
+
+# Data Preparation
+
+For this data visualization, I focused only on the average personal well-being scores from UK countries.
+Several steps were therefore necessary to process my data.
+
+1.  Renaming data columns to more appropriate and understandable names. For example, 'X.2' becomes '2016-17'
+2.  Removing unnecessarry columns e.g., upper/lower limits data, geography code, estimate
+3.  Removing unnecessary rows from the dataset to make it cleaner e.g., rows containing no valuable information
+
+```{r datawrangling}
+#rename data
+pwbdata <- pwbdata %>% 
+  rename(Geography = Title, pwb = X, '2016-17' = X.2, '2017-18' = X.6, '2018-19' = X.10, '2019-20' = X.14, '2020-21' = X.18)
+
+# use select to only look at some columns
+pwbdata <- pwbdata %>% 
+  select(Geography, pwb, '2016-17', '2017-18','2018-19', '2019-20', '2020-21')
+#head(pwbdata)
+
+#remove rows from dataset
+pwbclean <- pwbdata [-c(1,2),]
+
+```
+
+
+## Summary statistics
+
+Table displaying first 4 rows of prepared average personal well-being data:
+
+```{r group statistics}
+head(pwbclean, 4)
+```
+
+## Data Codebook
+
+Code Names | Definitions of Code Variables
+-----------|-------------------
+pwb        | Personal Well Being
+pwbdata    | The original personal well-being data, before it was processed
+pwbclean   | The personal well-being data, after it was processed and cleaned
+Year       | The year equivalent to when the data was collected.
+Geography  | The country from which the data was collected. 
+cbPalette  | A colour blind palette
+
+
+# Visualisations
+
+I chose to use a scatterplot as it allowed me to plot the average(mean) personal well-being points for each measure, on the same graph, and clearly highlight the country linked to each point, through the use of a colour coded legend. This would then allow for a clear comparison between the countries scores on personal well-being measures, to see which country had better personal well-being.  
+
+## Test visualisation 
+
+I first did a test visualisation, where I created a simple scatterplot to show the personal well-being scores from the year 2016-2017. This allowed me to ensure that when doing my final visualisation the points plotted on the graph were accurate.
+
+```{r scatterplot}
+
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7") #use of colourblind palette 
+
+#quick visualization test of datapoints
+p <- ggplot(pwbclean,aes(x=pwb,y=`2016-17`,color = Geography))
+p + geom_point(size=2.5) + geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures",y = "Scores", title = "Personal Wellbeing Scores in 2016-2017") + scale_colour_manual(values=cbPalette)
+
+```
+
+The first test visualisation did not plot the points accurately, as not all points were displayed. Therefore, a jitter was used to solve this. I played around with the exact height and width of the jitter until I found one that displayed each point perfectly, without being jittered too much. 
+
+```{r test}
+
+p <- ggplot(pwbclean,aes(x=pwb,y=`2016-17`,color = Geography))
+p + geom_point(size=2.5,position=position_jitter(h=.15,w=.14)) + geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures",y = "Scores", title = "Personal Wellbeing Scores in 2016-2017") + scale_colour_manual(values=cbPalette)
+ggsave(here("figs", "1617test.png"))
+```
+
+By adding in a jitter, you can now see all points on the graph for each geographical location. Therefore, when running my final visualisation I know to use a jitter to ensure that the points plotted on my graph are exact.
+
+## Visualisation 2
+
+I expanded the above code, creating a shiny app to display personal well-being scores of each country, with an interactive feature to enable a user to choose which year they would like to view personal well-being data from. Doing so allowed for comparisons of the data points through the visualisation, allowing the assessment of fluctuations of personal well-being in the UK, across the years. The app further allows a user to download the plots to their own device.
+
+Shiny interactive graph:
+
+```{r Shiny}
+
+ui <- shinyUI(fluidPage(
+  titlePanel("Personal Wellbeing Scores across the UK"),
+  sidebarLayout(
+    sidebarPanel(
+      h1("Selection Panel"),
+      radioButtons(inputId = "year", #created a button panel for the user to select the year they wish to view
+                   label = "Please select a year:",
+                   choices=c("2016-17" = "2016-17", "2017-18" = "2017-18","2018-19" = "2018-19", "2019-20" = "2019-20","2020-21" = "2020-21"),
+                   
+                   selected = "2016-17" #automatically set on the year 2016-2017
+      ),
+      radioButtons(inputId="filetype", label="Select the file type to download", choices = list("png","pdf")),#buttonpanel to choose type of file to download 
+      downloadButton(outputId = "down", label = "Download plot")),
+    
+    mainPanel(
+      plotOutput("scatterplot"),
+      textOutput("text"),
+      textOutput("text2"),
+      textOutput("text3")
+    )
+)
+))
+
+
+#instructions for server of what to display
+server <- shinyServer(function(input,output){
+  output$scatterplot <- renderPlot({#ggplot used to create a scatterplot of the data depending on year picked by user
+   ggplot(pwbclean, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point(size=3, position=position_jitter(h=.15,w=.14)) +  #get() is necessary to retrieve specific column data, without this r selects the y-value as a single parameter rather than entire column data  #jitter was used as points overlapped
+      geom_smooth(alpha=0.3, method = 'lm') + 
+      #customisation of plot for better visualisation
+      labs(x = "Personal Wellbeing Measures", y = "Scores", title = "Personal Wellbeing Scores") +  scale_colour_manual(values=cbPalette) + theme_light() + theme(text=element_text(color="black", size=11), legend.position = c("top"), legend.direction = "horizontal", axis.title.x=element_text(vjust=-1.5),
+                              legend.justification = 0.5, legend.text=element_text(size=11,color="black"), axis.line=element_line(color="black", size=0.2), axis.line.y=element_blank(),panel.grid.major=element_line(color="gray50", size=0.5), panel.grid.major.x = element_blank())
+  })
+  
+  #text used to display a key for the data
+  output$text <- renderText({"Personal WellBeing (PWB) Scores Key:"})
+  output$text2 <- renderText({"Low Anxiety=High PWB"})
+  output$text3 <- renderText({"Low Happiness,Low Satisfaction, Low Worthwhile = Low PWB"})
+  
+  output$down <- downloadHandler( #code to enable download of specific plot
+    filename = function(){
+     paste("pwb",input$year,input$filetype,sep='.') #code to name file being downloaded 
+    },
+    content = function(file){
+      if(input$filetype == "png")
+        png(file)
+      else
+        pdf(file) #copied ggplot code for scatterplot as could not be attributed to a variable and then used within the plot() function
+      plot(ggplot(pwbclean, aes(x= pwb, y=get(input$year), color = Geography)) + geom_point(size=3, position=position_jitter(h=.15,w=.14)) +  geom_smooth(alpha=0.3, method = 'lm') + labs(x = "Personal Wellbeing Measures", y = "Scores", title = "Personal Wellbeing Scores") + scale_colour_manual(values=cbPalette) + theme_light() + theme(text=element_text(color="black", size=11), legend.position = c("top"), legend.direction = "horizontal", axis.title.x=element_text(vjust=-1.5),
+                              legend.justification = 0.5, legend.text=element_text(size=11,color="black"), axis.line=element_line(color="black", size=0.2), axis.line.y=element_blank(),panel.grid.major=element_line(color="gray50", size=0.5), panel.grid.major.x = element_blank()))
+  dev.off()
+    }
+  )
+  
+  
+
+})
+
+shinyApp(ui, server)
+```
+
+### Interpretation of Visualisation:
+
+> Research Question 1
+
+#### Highest Personal Well-Being Score in the UK:
+
+
+Based on the Shiny graphs, it is evident that overall, Northern Ireland has consistently higher personal well-being scores across all measures over the years, in comparison to other UK countries.
+
+> Research Question 2
+
+#### Fluctuations of personal well-being over time in the UK:
+
+**Anxiety** - It appears that *Wales* consistently has higher ratings overall. Except for the year 2019-20 where *Scotland* had the highest Anxiety score. This is interesting given that in 2019-20 the COVID-19 pandemic started, therefore this could be an interesting future direction to look at. Did COVID-19 have an impact on countries Anxiety levels?
+
+**Happiness** - *Scotland* consistently showed the lowest Happiness ratings, except for 2017-18 where Wales had the lowest. 
+
+**Life Satisfaction** - Throughout the years, the lowest Life Satisfaction rating has constantly changed between UK countries.
+
+**Worthwhile** - *Scotland* mainly had the lowest worthwhile scores. However, in 2017-18 the Worthwhile measure was similar across all UK countries, with the exception of *Northern Ireland*. Furthermore, in 2019-20, *Scotland* actually appeared to have the second highest Worthwhile score, with *Wales* and *England* coming in below. This again could relate to the impact of COVID-19 and further research exploring this would be interesting. 
+
+These findings are important as they can help inform the policy-making process, shedding light on which countries need more help with their personal well-being than others. Based on the interpretation of the visualization created, **Northern Ireland** seems to need less help with their personal well-being. Whilst **Scotland** and **Wales** could possibly benefit from interventions to improve their overall personal well-being. 
+
+# Summary
+
+### What I have learnt:
+
+-   how to create a shiny interface to display different graphs based on a variable (year) within the dataset
+-   different ways of customizing a scatterplot to appear more visually pleasing
+- the importance of annotating code so that others can understand what I have done, and why? As well as enabling others to then accurately reproduce the graphs that I have created.
+- that it is necessary to be very specific in what you are asking R to do. For example, when setting up my scatterplot originally using 'y=year', R would not retrieve the right data and so using 'y=get(year)' was necessary to ensure that R understood the specific data that I wanted to use for my scatterplot. 
+
+### If I had more time to spend on this project:
+
+-   I would have found a way to use the click() feature, so that when a point on the plot was clicked on, the country and its equivalent personal-well being score for the specific measure would be displayed.
+- I struggled with creating a scale for the y-axis of my plot, due to having discrete variables in my dataset. Therefore, if I had more time I would have scaled the y-axis so that the points on the y-axis went up in the same amount of intervals for each year plot. This would have allowed for better comparison between the plots for each year, and so the fluctuations of personal well-being from each year could be better identified. 
+- I would also have created more visualizations, to show personal well-being scores from specific geographical locations. For example, counties within the UK, as well as countries. 
+
+# Resources used
+
+When completing this project the main resources I found helpful were:
+
+- [stackoverflow.com](https://stackoverflow.com/)
+
+- [rStudio.com](https://www.rstudio.com/). In particular the cheat sheets provided on rStudio were extremely helpful.
