@@ -1,0 +1,13 @@
+name: shinyapp
+title: shinyapp
+username:
+account: eirving1x
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6214046
+bundleId: 5859734
+url: https://eirving1x.shinyapps.io/shinyapp/
+when: 1651487088.06579
+lastSyncTime: 1651487088.06579
+asMultiple: FALSE
+asStatic: FALSE
